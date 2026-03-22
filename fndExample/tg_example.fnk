@@ -1,0 +1,17 @@
+>> TG:ID:API_ID:API_HASH:PHONE:AUTH. 
+>> AUTH - cloud password
+>> Example:
+>> Have cloud password
+TG:0:1881...:ajdkd829...:+1XXXXXXXXXX:123
+>> Haven't cloud password
+TG:1:1881...:ajdkd829...:+1XXXXXXXXXX:NONE
+
+>> Actually, you can use identical API_HASH and API_ID,
+>> But this is not recommended.
+
+>> Moreover, if you have account sessions, you don't need to authenticate them,
+>> so you can do this:
+
+TG:2:1881...:ajdkd829...:NONE:NONE
+
+>> But! You have to add session TG:2 (2.json) to .sessions
