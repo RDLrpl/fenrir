@@ -3,6 +3,8 @@ package main
 import (
 	"fmt"
 	"os"
+	"sync"
+	"time"
 
 	"github.com/RDLrpl/Fenrir/libs/fnlang"
 	"github.com/RDLrpl/Fenrir/libs/telegram"
@@ -30,23 +32,44 @@ func main() {
 			}
 			fmt.Println("Login successful")
 		}
-
+		return
 	}
+
 	conf, err := fnlang.ReadConfiguration()
 	if err != nil {
 		panic(err)
 	}
 
 	Acc, err := telegram.PairAccounts(conf.Params)
+	if err != nil {
+		panic(err)
+	}
+
+	var wg sync.WaitGroup
+	delayBetweenMessages := 600 * time.Millisecond
 
 	for _, Account := range Acc.Accs {
-		n := 1
-		for n > 0 {
-			fmt.Println(Account)
-			err := telegram.SendTGmessage(Account)
-			if err != nil {
-				panic(err)
+		wg.Add(1)
+		go func(acc telegram.Account) {
+			defer wg.Done()
+
+			ticker := time.NewTicker(delayBetweenMessages)
+			defer ticker.Stop()
+
+			for {
+				select {
+				case <-ticker.C:
+					fmt.Printf("Sending message from account: %v\n", acc)
+					err := telegram.SendTGmessage(acc)
+					if err != nil {
+						fmt.Printf("Error sending message for account %v: %v\n", acc, err)
+						return
+					}
+				}
 			}
-		}
+		}(Account)
 	}
+
+	wg.Wait()
+
 }
