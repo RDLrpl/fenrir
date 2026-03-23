@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"regexp"
+	"strings"
 )
 
 type Proxies struct {
@@ -12,43 +13,56 @@ type Proxies struct {
 }
 
 type Proxy struct {
-	Proto string
-	Ip    string
-	Port  string
-	Tid   string
+	Proto     string
+	Transport string
+	Ip        string
+	Port      string
+	Login     string
+	Pass      string
+	Tid       string
 }
 
 func LoadProxies(fncParams string) (Proxies, error) {
 	var tg tgparams
 	if err := json.Unmarshal([]byte(fncParams), &tg); err != nil {
-		return Proxies{}, fmt.Errorf("[FENRIR] fnm!E!(Invalid TGParams)")
+		return Proxies{}, err
 	}
 
 	content, err := os.ReadFile(tg.ProxiesPath)
 	if err != nil {
-		return Proxies{}, fmt.Errorf("[FENRIR] fnm!E!(Failed to read proxies file: %v)", err)
+		return Proxies{}, err
 	}
 
 	var result Proxies
-	re := regexp.MustCompile(`(?i)(SOCKS5)[\s\t]+([\d\.]+):(\d+)[\s\t-]*(\d+)?`)
-	matches := re.FindAllStringSubmatch(string(content), -1)
 
-	if len(matches) == 0 {
-		return result, fmt.Errorf("no valid proxies found. Content sample: %s", string(content))
-	}
+	re := regexp.MustCompile(`(?i)(SOCKS5)[\s\t]+(?:([a-z0-9]+):)?([a-z0-9\-\.]+):(\d+)(?:\[(?:L:([^,\]]+),\s*P:([^\]]+)|NONE)\])?[\s\t-]*(\d+)?`)
 
-	for _, match := range matches {
-		id := "0"
-		if len(match) > 4 && match[4] != "" {
-			id = match[4]
+	lines := strings.Split(string(content), "\n")
+
+	for _, line := range lines {
+		line = strings.TrimSpace(line)
+		if line == "" || strings.HasPrefix(line, ">>") {
+			continue
+		}
+
+		match := re.FindStringSubmatch(line)
+		if len(match) == 0 {
+			continue
 		}
 
 		result.Proxies = append(result.Proxies, Proxy{
-			Proto: match[1],
-			Ip:    match[2],
-			Port:  match[3],
-			Tid:   id,
+			Proto:     match[1],
+			Transport: match[2],
+			Ip:        match[3],
+			Port:      match[4],
+			Login:     match[5],
+			Pass:      match[6],
+			Tid:       match[7],
 		})
+	}
+
+	if len(result.Proxies) == 0 {
+		return result, fmt.Errorf("NO VALID PROXIES (PROX <-)")
 	}
 
 	return result, nil

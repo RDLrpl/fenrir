@@ -2,6 +2,7 @@ package telegram
 
 import (
 	"encoding/json"
+	"fmt"
 
 	"github.com/RDLrpl/Fenrir/libs/fnlang"
 )
@@ -17,21 +18,21 @@ type Account struct {
 	Proxy fnlang.Proxy
 }
 
-func PairAccounts(Params string) (Accounts, error) {
+func TG_PairAccounts(Params string) (Accounts, error) {
 	var Accs Accounts
 
 	msg, err := fnlang.MSG(Params)
 	if err != nil {
-		panic(err)
+		return Accounts{}, fmt.Errorf("[FENRIR] TG!E!(MESSAGE .fnm): %v", err)
 	}
 
 	tgApis, err := fnlang.TGfnk(Params)
 	if err != nil {
-		return Accounts{}, err
+		return Accounts{}, fmt.Errorf("[FENRIR] TG!E!(KEYS .fnk): %v", err)
 	}
 	tgProxies, err := fnlang.LoadProxies(Params)
 	if err != nil {
-		return Accounts{}, err
+		return Accounts{}, fmt.Errorf("[FENRIR] TG!E!(PROXY .prox): %v", err)
 	}
 
 	for _, api := range tgApis.Apis {
@@ -46,7 +47,6 @@ func PairAccounts(Params string) (Accounts, error) {
 		taegetTid := tgapi.ID
 
 		for _, proxy := range tgProxies.Proxies {
-
 			if proxy.Tid == taegetTid {
 				Acc.Proxy = proxy
 			}

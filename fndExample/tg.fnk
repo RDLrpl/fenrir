@@ -5,6 +5,7 @@
 TG:0:1881...:ajdkd829...:+1XXXXXXXXXX:123
 >> Haven't cloud password
 TG:1:1881...:ajdkd829...:+1XXXXXXXXXX:NONE
+>> (You need to use fenrir TG --auth)
 
 >> Actually, you can use identical API_HASH and API_ID,
 >> But this is not recommended.

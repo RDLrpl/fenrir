@@ -2,7 +2,6 @@ package fnlang
 
 import (
 	"encoding/json"
-	"fmt"
 	"os"
 	"regexp"
 	"strings"
@@ -18,12 +17,12 @@ func MSG(fncParams string) (Message, error) {
 
 	err := json.Unmarshal([]byte(fncParams), &tg)
 	if err != nil {
-		return Message{}, fmt.Errorf("[FENRIR] fnm!E!(Invalid TGParams)")
+		return Message{}, err
 	}
 
 	content, err := os.ReadFile(tg.MessagePath)
 	if err != nil {
-		return Message{}, fmt.Errorf("[FENRIR] fnm!E!(Invalid fnm-Path)")
+		return Message{}, err
 	}
 
 	res := Message{}

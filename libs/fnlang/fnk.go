@@ -3,7 +3,6 @@ package fnlang
 import (
 	"bufio"
 	"encoding/json"
-	"fmt"
 	"os"
 	"strings"
 )
@@ -26,12 +25,12 @@ func TGfnk(fncParams string) (Fnk, error) {
 
 	err := json.Unmarshal([]byte(fncParams), &tg)
 	if err != nil {
-		return Fnk{}, fmt.Errorf("[FENRIR] fnk!E!(Invalid TGParams)")
+		return Fnk{}, err
 	}
 
 	apis, err := os.Open(tg.ApisPath)
 	if err != nil {
-		return Fnk{}, fmt.Errorf("[FENRIR] fnk!E!(Invalid fnk-Path)")
+		return Fnk{}, err
 	}
 	defer apis.Close()
 
@@ -57,7 +56,7 @@ func TGfnk(fncParams string) (Fnk, error) {
 			jsonData, _ := json.Marshal(apiData)
 			resultApis = append(resultApis, string(jsonData))
 		} else {
-			return Fnk{}, fmt.Errorf(fmt.Sprintf("[FENRIR] fnk!E!(Invalid Format) line: %s", line))
+			return Fnk{}, err
 		}
 	}
 

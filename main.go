@@ -3,73 +3,86 @@ package main
 import (
 	"fmt"
 	"os"
-	"sync"
-	"time"
 
-	"github.com/RDLrpl/Fenrir/libs/fnlang"
-	"github.com/RDLrpl/Fenrir/libs/telegram"
+	"github.com/RDLrpl/Fenrir/libs/handlers"
+	"github.com/RDLrpl/Fenrir/libs/utils"
+	"github.com/charmbracelet/lipgloss"
 )
 
 func main() {
-	if len(os.Args) == 2 && os.Args[1] == "--auth" {
-		err := os.MkdirAll(".sessions", 0755)
-		if err != nil {
-			panic(err)
+	style := lipgloss.NewStyle().
+		Bold(true).
+		Foreground(lipgloss.Color("#812e23"))
+
+	fmt.Println(style.Render(utils.FenArt))
+	if len(os.Args) == 2 {
+		if os.Args[1] == "--clean" {
+			handlers.Clean()
 		}
+		return
+	}
+	if len(os.Args) == 3 {
+		if os.Args[1] == "TG" && os.Args[2] == "--start!m" {
+			handlers.TG_Send()
+		}
+		if os.Args[1] == "TG" && os.Args[2] == "--auth" {
+			handlers.Telegram_Auth()
+
+			return
+		}
+	}
+
+	helptext := lipgloss.NewStyle().
+		Bold(true).
+		Foreground(lipgloss.Color("#00b7ff"))
+
+	fmt.Println(
+		helptext.Render(
+			`
+			usage:
+
+			fenrir TG --auth (Auth Accs {Creating .sessions for accounts})
+			fenrir TG --start!m (Start message sending)
+
+			fenrir --clean (clean all cache files (e.x. .sessions))
+			`,
+		))
+	/*
 		conf, err := fnlang.ReadConfiguration()
 		if err != nil {
 			panic(err)
 		}
 
-		Acc, err := telegram.PairAccounts(conf.Params)
+		Acc, err := telegram.TG_PairAccounts(conf.Params)
 		if err != nil {
 			panic(err)
 		}
 
+		var wg sync.WaitGroup
+		delayBetweenMessages := 600 * time.Millisecond
+
 		for _, Account := range Acc.Accs {
-			if err := telegram.Auth(Account); err != nil {
-				panic(err)
-			}
-			fmt.Println("Login successful")
-		}
-		return
-	}
+			wg.Add(1)
+			go func(acc telegram.Account) {
+				defer wg.Done()
 
-	conf, err := fnlang.ReadConfiguration()
-	if err != nil {
-		panic(err)
-	}
+				ticker := time.NewTicker(delayBetweenMessages)
+				defer ticker.Stop()
 
-	Acc, err := telegram.PairAccounts(conf.Params)
-	if err != nil {
-		panic(err)
-	}
-
-	var wg sync.WaitGroup
-	delayBetweenMessages := 600 * time.Millisecond
-
-	for _, Account := range Acc.Accs {
-		wg.Add(1)
-		go func(acc telegram.Account) {
-			defer wg.Done()
-
-			ticker := time.NewTicker(delayBetweenMessages)
-			defer ticker.Stop()
-
-			for {
-				select {
-				case <-ticker.C:
-					fmt.Printf("Sending message from account: %v\n", acc)
-					err := telegram.SendTGmessage(acc)
-					if err != nil {
-						fmt.Printf("Error sending message for account %v: %v\n", acc, err)
-						return
+				for {
+					select {
+					case <-ticker.C:
+						fmt.Printf("[FENRIR]: Sending From >> %v\n", acc.Id)
+						err := telegram.SendTGmessage(acc)
+						if err != nil {
+							fmt.Printf("[ERROR]!%v: %v\n", acc.Id, err)
+							return
+						}
 					}
 				}
-			}
-		}(Account)
-	}
+			}(Account)
+		}
 
-	wg.Wait()
-
+		wg.Wait()
+	*/
 }

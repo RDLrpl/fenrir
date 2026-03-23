@@ -71,13 +71,13 @@ func ReadConfiguration() (fnc, error) {
 			}
 		}
 		if tgparams.ApisPath == "" {
-			return fnc{}, fmt.Errorf("[FENRIR] !E!(?NO FNK)")
+			return fnc{}, fmt.Errorf("[FENRIR] fnc!E!(?NO FNK)")
 		}
 		if tgparams.MessagePath == "" {
-			return fnc{}, fmt.Errorf("[FENRIR] !E!(?NO FNM)")
+			return fnc{}, fmt.Errorf("[FENRIR] fnc!E!(?NO FNM)")
 		}
 		if tgparams.ProxiesPath == "" {
-			return fnc{}, fmt.Errorf("[FENRIR] !E!(?NO PROX)")
+			return fnc{}, fmt.Errorf("[FENRIR] fnc!E!(?NO PROX)")
 		}
 		if tgparams.Flags == "" {
 			tgparams.Flags = "NONE"

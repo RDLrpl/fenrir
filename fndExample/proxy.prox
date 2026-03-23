@@ -1,4 +1,6 @@
-SOCKS5 ip:port - 0
+SOCKS5 tcp:ip:port[L:root, P:Qwerty] - 0
+SOCKS5 tcp:ip:port[NONE] - 0
+
 >> Format (SOCKS5) ip:port (255.255.255.255)(:1111) - ID (0)
 
->> Supported Poxies: SOCKS5.
+>> Supported Poxies: SOCKS5.    
