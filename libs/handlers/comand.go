@@ -45,6 +45,44 @@ func Telegram_Auth() {
 	}
 }
 
+func TG_Join() {
+	logger := log.New(os.Stderr)
+	styles := log.DefaultStyles()
+	styles.Levels[log.ErrorLevel] = lipgloss.NewStyle().
+		SetString("ERROR").
+		Bold(true).
+		Foreground(lipgloss.Color("#ff0055")).
+		Background(lipgloss.Color("#3d0014"))
+	logger.SetStyles(styles)
+
+	conf, err := fnlang.ReadConfiguration()
+	if err != nil {
+		logger.Error(err)
+		return
+	}
+
+	Acc, err := telegram.TG_PairAccounts(conf.Params)
+	if err != nil {
+		logger.Error(err)
+		return
+	}
+
+	var wg sync.WaitGroup
+
+	for _, account := range Acc.Accs {
+		wg.Add(1)
+		go func(a telegram.Account) {
+			defer wg.Done()
+			if err := telegram.JoinTGChan(a); err != nil {
+				logger.Error(fmt.Sprintf("[Fenrir] User %s: %v", a.Id, err))
+				return
+			}
+			logger.Info(fmt.Sprintf("[Fenrir] Chan %s, User %s: Success", a.Msg.Channel_id, a.Id))
+		}(account)
+	}
+
+	wg.Wait()
+}
 func Clean() {
 	logger := log.New(os.Stderr)
 

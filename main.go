@@ -21,15 +21,22 @@ func main() {
 		}
 		return
 	}
-	if len(os.Args) == 3 {
-		if os.Args[1] == "TG" && os.Args[2] == "--start!m" {
+	if len(os.Args) == 3 && os.Args[1] == "TG" {
+		if os.Args[2] == "--ATCK!m" {
 			handlers.TG_Send()
 		}
-		if os.Args[1] == "TG" && os.Args[2] == "--auth" {
+		if os.Args[2] == "--ATCK!j" {
+			handlers.TG_Join()
+
+			return
+		}
+
+		if os.Args[2] == "--auth" {
 			handlers.Telegram_Auth()
 
 			return
 		}
+
 	}
 
 	helptext := lipgloss.NewStyle().
@@ -42,47 +49,10 @@ func main() {
 			usage:
 
 			fenrir TG --auth (Auth Accs {Creating .sessions for accounts})
-			fenrir TG --start!m (Start message sending)
+			fenrir TG --ATCK!m (Start message sending)
+			fenrir TG --ATCK!j (Join chat (message.fnm) // only chats, simple join)
 
 			fenrir --clean (clean all cache files (e.x. .sessions))
 			`,
 		))
-	/*
-		conf, err := fnlang.ReadConfiguration()
-		if err != nil {
-			panic(err)
-		}
-
-		Acc, err := telegram.TG_PairAccounts(conf.Params)
-		if err != nil {
-			panic(err)
-		}
-
-		var wg sync.WaitGroup
-		delayBetweenMessages := 600 * time.Millisecond
-
-		for _, Account := range Acc.Accs {
-			wg.Add(1)
-			go func(acc telegram.Account) {
-				defer wg.Done()
-
-				ticker := time.NewTicker(delayBetweenMessages)
-				defer ticker.Stop()
-
-				for {
-					select {
-					case <-ticker.C:
-						fmt.Printf("[FENRIR]: Sending From >> %v\n", acc.Id)
-						err := telegram.SendTGmessage(acc)
-						if err != nil {
-							fmt.Printf("[ERROR]!%v: %v\n", acc.Id, err)
-							return
-						}
-					}
-				}
-			}(Account)
-		}
-
-		wg.Wait()
-	*/
 }

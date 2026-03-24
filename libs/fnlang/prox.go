@@ -35,13 +35,25 @@ func LoadProxies(fncParams string) (Proxies, error) {
 
 	var result Proxies
 
-	re := regexp.MustCompile(`(?i)(SOCKS5)[\s\t]+(?:([a-z0-9]+):)?([a-z0-9\-\.]+):(\d+)(?:\[(?:L:([^,\]]+),\s*P:([^\]]+)|NONE)\])?[\s\t-]*(\d+)?`)
+	re := regexp.MustCompile(`(?i)(SOCKS5)[\s\t]+(?:([a-z0-9]+):)?([a-z0-9\-\.]+):(\d+)(?:\[(?:L:([^,\]]+),\s*P:([^\]]+)|NONE)\])?[\s\t-]*(\w+)?`)
 
 	lines := strings.Split(string(content), "\n")
 
 	for _, line := range lines {
 		line = strings.TrimSpace(line)
 		if line == "" || strings.HasPrefix(line, ">>") {
+			continue
+		}
+
+		if strings.HasPrefix(line, "NONE") {
+			parts := strings.Split(line, " - ")
+			if len(parts) < 2 {
+				continue
+			}
+			result.Proxies = append(result.Proxies, Proxy{
+				Transport: "None",
+				Tid:       strings.TrimSpace(parts[1]),
+			})
 			continue
 		}
 
