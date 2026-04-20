@@ -1,0 +1,187 @@
+@font-face {
+  font-family: 'QuickSand';
+  src: url('../fonts/quicksand.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Cause';
+  src: url('../fonts/cause.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Amatic-bold';
+  src: url('../fonts/amatic-bold.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.telegram-route {
+  min-height: 100vh;
+  background: #000;
+  display: flex;
+  flex-direction: column;
+  color: white;  
+
+  background: radial-gradient(circle at 70% 70%, #1a1a1a 0%, #000 100%);
+  position: relative;
+  overflow: hidden;
+
+  user-select: none;
+  -webkit-user-select: none; 
+}
+
+.fenrir-page {
+  margin-left: 15%;
+  width: 85%;
+  min-height: 100vh;
+
+  user-select: text;
+  -webkit-user-select: text; 
+}
+
+.fenrir-button {
+  background-color: #ffffff;
+  border-color: #00000000;
+  color: #000000;
+
+  border-radius: 8px;
+  width: 90%;
+  height: 30px;
+
+  font-family: 'QuickSand';
+  font-size: 20px;
+
+  display: flex;  
+}
+
+.fenrir-button:hover {
+  background-color: #dddddd;
+}
+
+.fenrir {
+  padding-top: 8px;
+  position: fixed;
+  top: 0;
+  width: 15%;
+  height: 100%;
+  background: #000000;
+  color: white;
+
+  display: flex; 
+  height: 100%;
+  flex-direction: column;
+  gap: 8px;
+  overflow-y: auto;
+  padding-bottom: 10px;
+}
+
+.aside {
+  position: fixed;
+  left: -15%;
+  top: 0;
+  width: 15%;
+  height: 100%;
+  background: #161616;
+  color: white;
+  transition: left 0.3s ease;
+  overflow-y: auto;
+}
+
+.aside-open {
+  left: 0;
+}
+
+.aside-head {
+  display: flex;
+  padding-left: 5px;
+  padding-top: 5px;
+}
+
+.cause-text {
+  text-indent: 15px;
+  font-family: "Cause";
+  font-size: 15px;
+}
+
+.quicksand-small-text {
+  text-indent: 15px;
+  font-family: "QuickSand";
+  font-size: 10px;
+}
+
+.amaticb-very-small-text {
+  font-family: "Amatic-bold";
+  font-size: 14px;
+}
+
+.liacc {
+  background-color: #222222;
+  border-radius: 12px;
+
+  display: flex;
+  flex-direction: column;
+  width: 90%;
+  height: 60px;
+  gap: 5px;
+}
+
+.lichat {
+  background-color: #222222;
+  border-radius: 12px;
+
+  display: flex;
+  flex-direction: column;
+  width: 90%;
+  height: 90px;
+  gap: 5px;
+}
+
+.back-button {
+  background-color: #ffffff;
+  border-color: #00000000;
+  color: #000000;
+
+  border-radius: 12px;
+  width: 30px;
+  height: 30px;
+
+  font-family: 'QuickSand';
+  font-weight: bold;
+  font-size: 30px;
+
+  display: flex;  
+}
+
+.set-button {
+    background-color: #000000b2;
+    border-color: #00000000;
+    color: white;
+
+    top: 90%;    
+    left: 10px;
+
+    width: 30px;
+    height: 30px;
+
+    border-radius: 15px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    z-index: 10;  
+}
+
+li {
+  margin-bottom: 10px;
+}
+
+ul {
+  list-style: none;
+  margin: 0px;
+  padding: 0;
+}

@@ -1,0 +1,104 @@
+@font-face {
+  font-family: 'Cause';
+  src: url('../fonts/cause.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.select-menu {
+  width: 200px;
+  height: 70px;
+  background-color: #000000b2;
+  border-radius: 8px;
+
+  display: flex; 
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+
+.settings-button {
+    position: absolute;
+    background-color: #000000b2;
+    border-color: #00000000;
+    color: white;
+
+    top: 10px;    
+    right: 10px;
+
+    width: 20px;
+    height: 20px;
+
+    border-radius: 15px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    z-index: 10;  
+}
+
+.menu-button {
+    background-color: #000000b2;
+    border-color: #00000000;
+    color: white;
+
+    border-radius: 8px;
+    width: 90%;
+    height: 30%;
+
+    font-family: 'Cause';
+
+    display: flex;  
+    align-items: center;
+    justify-content: center;
+}
+
+.menu-button:hover {
+  background-color: #292828b2;
+}
+
+.settings-button:hover {
+  background-color: #292828b2;
+}
+
+.menu-title {
+    display: flex;
+    font-family: 'Cause';
+    margin-top: 3.5%;
+    justify-content: center;
+}
+
+.select-route {
+  min-height: 100vh;
+  background: #000;
+  display: flex;
+  flex-direction: column;
+  color: white;  
+  align-items: center;
+  justify-content: center;
+
+  background: radial-gradient(circle at 35% 35%, #1a1a1a 0%, #000 100%);
+  position: relative;
+  overflow: hidden;
+
+  user-select: none;
+  -webkit-user-select: none; 
+}
+
+.select-route::before {
+  content: "";
+  position: absolute;
+  width: 150%; height: 150%;
+  background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 40%);
+  animation: move-bg 20s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes move-bg {
+  0% { transform: translate(0, 0); }
+  40%, 80% { 
+    transform: translate(calc(var(--rnd-i) * 1%), calc(var(--rnd-i) * 1%)); 
+  }
+  100% { transform: translate(0, 0); }
+}
