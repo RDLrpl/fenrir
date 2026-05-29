@@ -1,0 +1,14 @@
+[Messages]
+ms1 = "Hello Fenrir!"
+
+[Telegram]
+sessions = ".sessions"
+
+[Telegram.targets]
+t1 = "@example"
+
+[Telegram.accounts]
+
+[Discord]
+
+[Discord.targets]

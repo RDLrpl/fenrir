@@ -1,8 +1,0 @@
->> Format SOCKS5 transport:ip:port[L:Login, P:Password] - 0
-SOCKS5 tcp:ip:port[L:root, P:Qwerty] - 0
-SOCKS5 tcp:ip:port[NONE] - 1
->> Without Proxy
-NONE - 2
-
-
->> Supported Poxies: SOCKS5.    

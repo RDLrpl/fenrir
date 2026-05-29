@@ -1,4 +1,4 @@
-package cli
+package utility
 
 var FenArt = `
 ______ _____ _   _ ______ ___________  ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓█████▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓
@@ -10,8 +10,8 @@ ______ _____ _   _ ______ ___________  ▓▓▓▓▓▓▓▓▓▓▓▓▓�
                                        ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓██▒▒▒▒▒▒░░░░░░░░▒▒▒▒██▓▓▓▓▓▓
 ______________________________________ ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓██▒▒▒▒░░░░░░░░░░░░░░▒▒██▓▓▓▓▓▓
 Git: github.com/RDLrpl/fenrir          ██▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒▒░░░░░░░░░░░░░░░░░░▒▒██▓▓▓▓▓▓
-Version: 1.2.0                         ██████░░░░░░░░░░░░░░░░████▒▒░░░░░░░░░░▒▒██▓▓▓▓
-V|CN: Freedom                          ▓▓██▒▒░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▒▒██▓▓▓▓
+Version: 2.0.0                         ██████░░░░░░░░░░░░░░░░████▒▒░░░░░░░░░░▒▒██▓▓▓▓
+V|CN: Gleipnir                         ▓▓██▒▒░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░▒▒██▓▓▓▓
   __  __     __  __                    ▓▓▓▓▓▓██████░░░░░░░░░░░░░░░░░░░░░░░░░░░░▒▒██▓▓
  /__)/  )/  /__)/__)/                  ▓▓▓▓▓▓░░░░░░▒▒▒▒▒▒░░░░░░░░░░░░░░░░░░░░░░▒▒██▓▓
 / ( /(_/(__/ ( /   (__                 ▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▓▒▒██░░░░░░░░░░░░░░░░░░░░▒▒██▓▓
@@ -19,13 +19,43 @@ ______________________________________ ▓▓▓▓▓▓▓▓▓▓▓▓▓�
 `
 
 var Usage = `
-_Usage_
-
-fenrir --run (Run Client. A powerful thing!)
-
-fenrir cli tg --auth (Auth Accs {Creating .sessions for accounts})
-fenrir cli tg --atckm (Start message sending (message.fnm))
-fenrir cli tg --atckj (Join chat (message.fnm))
-
-fenrir --clean (clean all cache files (e.x. .sessions))
+emmm
 `
+
+type Configuration struct {
+	Messages map[string]string `toml:"Messages"`
+	Telegram TelegramConfig    `toml:"Telegram"`
+	Discord  DiscordConfig     `toml:"Discord"`
+}
+
+type TelegramConfig struct {
+	Sessions string                     `toml:"sessions"`
+	Targets  map[string]string          `toml:"targets"`
+	Accounts map[string]TelegramAccount `toml:"accounts"`
+}
+
+type TelegramAccount struct {
+	API_id     string `toml:"api_id"`
+	API_hash   string `toml:"api_hash"`
+	Number     string `toml:"number"`
+	CloudPass  string `toml:"cloudpass"`
+	Proxy      string `toml:"proxy"`
+	ProxyPass  string `toml:"proxypass"`
+	ProxyLogin string `toml:"proxylogin"`
+	Targ       string `toml:"targ"`
+	Marg       string `toml:"marg"`
+}
+
+type DiscordConfig struct {
+	Targets  map[string][]string       `toml:"targets"`
+	Accounts map[string]DiscordAccount `toml:"accounts"`
+}
+
+type DiscordAccount struct {
+	Token      string `toml:"token"`
+	Proxy      string `toml:"proxy"`
+	ProxyPass  string `toml:"proxypass"`
+	ProxyLogin string `toml:"proxylogin"`
+	Targ       string `toml:"targ"`
+	Marg       string `toml:"marg"`
+}
