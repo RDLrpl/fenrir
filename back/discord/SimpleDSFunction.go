@@ -68,3 +68,22 @@ func Send(channel_id string, token string, message string, proxy string, proxy_l
 	fmt.Printf("|- Message OK: %s\n", msg.ID)
 	return nil
 }
+
+func GetLastMessages(token string, channelID string, n int, proxy string, proxyLogin string, proxyPass string) ([]*discordgo.Message, error) {
+	dg, err := SimpleLogIn(token, proxy, proxyLogin, proxyPass)
+	if err != nil {
+		return nil, fmt.Errorf("login error: %v", err)
+	}
+
+	limit := n
+	if limit > 100 {
+		limit = 100
+	}
+
+	messages, err := dg.ChannelMessages(channelID, limit, "", "", "")
+	if err != nil {
+		return nil, fmt.Errorf("fetch: %v", err)
+	}
+
+	return messages, nil
+}

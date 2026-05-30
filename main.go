@@ -17,6 +17,7 @@ import (
 
 func main() {
 	fmt.Println(utility.FenArt)
+	back.CreateOrCheckConf()
 
 	arguments := os.Args
 	args := len(arguments)
@@ -231,39 +232,7 @@ func discord_manipulation(arg string) {
 			}
 		}
 	case arg == "asend1":
-		conf := back.ParseConfig()
-
-		var wg sync.WaitGroup
-		delayBetweenMessages := 200 * time.Millisecond
-
-		for _, acc := range conf.Discord.Accounts {
-			targets, exists := conf.Discord.Targets[acc.Targ]
-			if !exists || len(targets) == 0 {
-				fmt.Printf("Ошибка: нет целей для аккаунта %s\n", acc.Token)
-				continue
-			}
-
-			wg.Add(1)
-			go func(channel_id string, message string, acc utility.DiscordAccount) {
-				defer wg.Done()
-				for {
-					dg, err := discord.SimpleLogIn(acc.Token, acc.Proxy, acc.ProxyLogin, acc.ProxyPass)
-					if err != nil {
-						fmt.Printf("Ooops %s: %s\n", acc.Token, err)
-					}
-
-					msg, err := dg.ChannelMessageSend(channel_id, message)
-					if err != nil {
-						fmt.Printf("Ooops : %v\n", err)
-					}
-
-					fmt.Printf("|- Message OK: %s\n", msg.ID)
-				}
-			}(targets[0], conf.Messages[acc.Marg], acc)
-			time.Sleep(delayBetweenMessages)
-		}
-		wg.Wait()
-
+		discord.Asendds(context.Background())
 	default:
 		//usage
 	}
@@ -271,5 +240,11 @@ func discord_manipulation(arg string) {
 }
 
 func fenrir_manipulation(arg string) {
-
+	switch {
+	case arg == "i-fenrirCAAU":
+		err := back.AutoDownloadCAAU()
+		if err != nil {
+			panic(err)
+		}
+	}
 }

@@ -22,6 +22,11 @@ var Usage = `
 emmm
 `
 
+var FenrirCAAUpack = map[string]string{
+	"windows-amd": "https://storage.googleapis.com/chromium-browser-snapshots/Win_x64/1638973/chrome-win.zip",
+	"linux-amd":   "https://storage.googleapis.com/chromium-browser-snapshots/Linux_x64/1638973/chrome-linux.zip",
+}
+
 type Configuration struct {
 	Messages map[string]string `toml:"Messages"`
 	Telegram TelegramConfig    `toml:"Telegram"`

@@ -4,6 +4,7 @@ import (
 	"context"
 	"net/http"
 	"net/url"
+	"runtime"
 	"strings"
 	"time"
 
@@ -63,4 +64,16 @@ func Check_proxy(proxyAddr string, proxyLogin string, proxyPass string) (string,
 	defer resp.Body.Close()
 
 	return parsedURL.Host, cleanLogin, cleanPass, resp.StatusCode == http.StatusOK
+}
+
+func Check_CAAU() (bool, string) {
+	if runtime.GOOS == "linux" && runtime.GOARCH == "amd64" {
+		return true, "./fpkg/CAAU/linuxamd/chrome-linux/chrome"
+	}
+
+	if runtime.GOOS == "windows" && runtime.GOARCH == "amd64" {
+		return true, "./fpkg/CAAU/windowsamd/chrome-windows/chrome-windows/chrome.exe"
+	} else {
+		return false, ""
+	}
 }

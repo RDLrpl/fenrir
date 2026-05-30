@@ -1,4 +1,5 @@
 .sessions/
 old/
+fpkg/
 fenrir
 config.toml

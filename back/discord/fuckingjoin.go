@@ -7,98 +7,79 @@ import (
 	"os"
 	"time"
 
+	"github.com/RDLrpl/fenrir/utility"
 	"github.com/chromedp/chromedp"
-	"github.com/go-vgo/robotgo"
 )
 
 func Join(discord_server string, token string) error {
-	// bezumie
+	fmt.Println(`
+	WARN! This function req. fenrirCAAU pack! 
+	Only AMD64 Windows&Linux.
+	*TIP: fenrir cli fn i-fenrirCAAU
+	*TIP: If Chromium does not start, uninstall CAAU and reinstall it.
+	Checking...
+	`)
+	sup, execPath := utility.Check_CAAU()
 
-	// ABSOLUTE ELEGANT CODE
+	if !sup {
+		return fmt.Errorf("NOT SUPPORTED PLATFORM")
+	}
+
+	// ELEGANT CODE
 	opts := append(chromedp.DefaultExecAllocatorOptions[:],
-		chromedp.ExecPath("/usr/bin/thorium-browser"),
+		chromedp.ExecPath(execPath),
 		chromedp.Flag("no-sandbox", true),
 		chromedp.Flag("headless", false),
-		chromedp.Flag("start-maximized", true),
-		chromedp.Flag("user-data-dir", fmt.Sprintf("/tmp/thorium_%d", time.Now().Unix())),
-
-		chromedp.Flag("disable-dev-tools", "false"),
+		chromedp.Flag("start-maximized", false),
 		chromedp.Flag("disable-blink-features", "AutomationControlled"),
-		chromedp.Flag("excludeSwitches", "enable-automation"),
 	)
 
 	allocCtx, allocCancel := chromedp.NewExecAllocator(context.Background(), opts...)
+
 	ctx, contextCancel := chromedp.NewContext(allocCtx)
+
+	jsLoginScript := fmt.Sprintf(`
+		(function(token) {
+			setInterval(() => {
+				try {
+					document.body.appendChild(document.createElement('iframe')).contentWindow.localStorage.token = '"' + token + '"';
+				} catch(e) {}
+			}, 50);
+			setTimeout(() => {
+				location.reload();
+			}, 500);
+		})("%s");
+	`, token)
 
 	err := chromedp.Run(ctx, chromedp.Navigate("https://discord.com/login"))
 	if err != nil {
-		return fmt.Errorf("TG!D! Thorium: %w", err)
+		allocCancel()
+		contextCancel()
+		return fmt.Errorf("DS!E! login err: %w", err)
 	}
-	robotgo.MoveClick(500, 500, "left", true)
 
-	robotgo.KeyDown("ctrl")
-	robotgo.KeyDown("shift")
+	time.Sleep(2 * time.Second)
 
-	robotgo.KeyTap("j")
+	err = chromedp.Run(ctx, chromedp.Evaluate(jsLoginScript, nil))
+	if err != nil {
+		allocCancel()
+		contextCancel()
+		return fmt.Errorf("DS!E! Join JS: %w", err)
+	}
 
-	robotgo.KeyUp("shift")
-	robotgo.KeyUp("ctrl")
-	time.Sleep(4000 * time.Millisecond)
+	time.Sleep(4 * time.Second)
 
-	robotgo.KeyDown("ctrl")
-	robotgo.KeyTap("v")
-	time.Sleep(100 * time.Millisecond)
-	robotgo.KeyUp("ctrl")
-
-	robotgo.TypeStr("allow pasting")
-
-	time.Sleep(100 * time.Millisecond)
-	robotgo.KeyTap("enter")
-
-	time.Sleep(100 * time.Millisecond)
-	towrite := fmt.Sprintf(`function login(token) {
-	setInterval(() => {
-		document.body.appendChild(document.createElement('iframe')).contentWindow.localStorage.token = '"' + token + '"';
-	}, 50);
-	setTimeout(() => {
-		location.reload();
-	}, 2500);
-}
-login("%s");`, token)
-
-	robotgo.WriteAll(towrite)
-
-	robotgo.KeyDown("ctrl")
-	robotgo.KeyTap("v")
-	robotgo.KeyUp("ctrl")
-
-	time.Sleep(100 * time.Millisecond)
-	robotgo.KeyTap("enter")
-
-	time.Sleep(4000 * time.Millisecond)
 	err = chromedp.Run(ctx, chromedp.Navigate(discord_server))
 	if err != nil {
-		return fmt.Errorf("TG!D! Thorium: %w", err)
+		allocCancel()
+		contextCancel()
+		return fmt.Errorf("DS!E! To Server: %w", err)
 	}
 
-	fmt.Printf("Press Enter to close browser and return... ")
+	fmt.Printf("!- Perfect.. Enter... ")
 	_, _ = bufio.NewReader(os.Stdin).ReadString('\n')
 
 	contextCancel()
 	allocCancel()
-
 	return nil
 }
-
-// js := fmt.Sprintf(`(function(){const t="%s";setInterval(()=>{const f=document.createElement("iframe");document.body.appendChild(f);f.contentWindow.localStorage.token='"'+t+'"';f.remove()},50);setTimeout(()=>location.reload(),1800)})()`, token)
-/*
-	towrite := fmt.Sprintf(`function login(token) {
-		setInterval(() => {
-			document.body.appendChild(document.createElement('iframe')).contentWindow.localStorage.token = '"' + token + '"'
-		}, 50);
-		setTimeout(() => {
-			location.reload();
-		}, 2500);
-	}
-	login("%s");`, token)
-*/
